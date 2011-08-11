@@ -215,9 +215,13 @@ module RailsGuides
       code_blocks = []
 
       body.gsub!(%r{<(yaml|shell|ruby|erb|html|sql|plain)(;[^>]+)?>(.*?)</\1>}m) do |m|
-        brush = case $1
+        brush = $1
+        brush_options = $2
+        brush_data = $3
+
+        brush = case brush
           when 'ruby', 'sql', 'plain'
-            $1
+            brush
           when 'erb'
             'ruby; html-script: true'
           when 'html'
@@ -226,11 +230,28 @@ module RailsGuides
             'plain'
         end
 
+        # Highlight a range of lines by replacing the shortcut "highlight: [1..3]" with "highlight: [1,2,3]"
+        if brush_options
+          brush_options.gsub!(%r{(highlight: \[)([^\]]+)(\])}) do |mm|
+            prefix = $1
+            payload = $2
+            suffix = $3
+
+            payload.gsub!(/(\d+)\.\.(\d+)/) do |mmm|
+              start = $1.to_i
+              stop = $2.to_i
+              (start..stop).to_a.join(',')
+            end
+
+            [prefix, payload, suffix].join('')
+          end
+        end
+
         code_blocks.push(<<HTML)
 <notextile>
 <div class="code_container">
-<pre class="brush: #{brush}; gutter: false; toolbar: false#{$2}">
-#{ERB::Util.h($3).strip}
+<pre class="brush: #{brush}; gutter: false; toolbar: false#{brush_options}">
+#{ERB::Util.h(brush_data).strip}
 </pre>
 </div>
 </notextile>
