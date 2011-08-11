@@ -502,7 +502,7 @@ you how to connect the root of your site to a specific controller and action.
 Find the line beginning with +root :to+, uncomment it and change it like the
 following:
 
-<ruby>
+<ruby; highlight: 6>
 Blog::Application.routes.draw do
 
   #...
@@ -629,7 +629,7 @@ h4. Adding a Link
 To hook the posts up to the home page you've already created, you can add a link
 to the home page. Open +app/views/home/index.html.erb+ and modify it as follows:
 
-<ruby>
+<ruby; highlight: 2>
 <h1>Hello, Rails!</h1>
 <%= link_to "My Blog", posts_path %>
 </ruby>
@@ -678,7 +678,7 @@ h4. Adding Some Validation
 Rails includes methods to help you validate the data that you send to models.
 Open the +app/models/post.rb+ file and edit it:
 
-<ruby>
+<ruby; highlight: [2,3,4]>
 class Post < ActiveRecord::Base
   validates :name,  :presence => true
   validates :title, :presence => true,
@@ -817,7 +817,7 @@ been changed in Rails 3.0. An application specific +layout+ is used for all the
 controllers and can be found in +app/views/layouts/application.html.erb+. Open
 this layout in your editor and modify the +body+ tag:
 
-<erb>
+<erb; highlight: 9>
 <!DOCTYPE html>
 <html>
 <head>
@@ -1190,7 +1190,7 @@ end
 
 You'll need to edit the +post.rb+ file to add the other side of the association:
 
-<ruby>
+<ruby; highlight: 6>
 class Post < ActiveRecord::Base
   validates :name,  :presence => true
   validates :title, :presence => true,
@@ -1215,7 +1215,7 @@ where we would like to navigate to see +comments+. Open up the
 automatically for +posts+ near the top by the scaffold generator, +resources
 :posts+, edit it as follows:
 
-<ruby>
+<ruby; highlight: [1,2,3]>
 resources :posts do
   resources :comments
 end
@@ -1296,7 +1296,7 @@ So first, we'll wire up the Post show template
 This adds a form on the Post show page that creates a new comment, which will
 call the +CommentsController+ +create+ action, so let's wire that up:
 
-<ruby>
+<ruby; highlight: [2,3,4,5,6]>
 class CommentsController < ApplicationController
   def create
     @post = Post.find(params[:post_id])
@@ -1322,7 +1322,7 @@ using the +post_path(@post)+ helper. As we have already seen, this calls the
 template. This is where we want the comment to show, so let's add that to the
 +app/views/posts/show.html.erb+.
 
-<erb>
+<erb; highlight: [18,19,20,21,22,23,24,25,26,27,28,29]>
 <p class="notice"><%= notice %></p>
 
 <p>
@@ -1389,7 +1389,7 @@ First we will make a comment partial to extract showing all the comments for the
 post. Create the file +app/views/comments/_comment.html.erb+ and put the
 following into it:
 
-<erb>
+<erb; highlight: [1,2,3,4,5,6,7,8,9]>
 <p>
   <b>Commenter:</b>
   <%= comment.commenter %>
@@ -1404,7 +1404,7 @@ following into it:
 Then in the +app/views/posts/show.html.erb+ you can change it to look like the
 following:
 
-<erb>
+<erb; highlight: 19>
 <p class="notice"><%= notice %></p>
 
 <p>
@@ -1457,7 +1457,7 @@ h4. Rendering a Partial Form
 Lets also move that new comment section out to it's own partial, again, you
 create a file +app/views/comments/_form.html.erb+ and in it you put:
 
-<erb>
+<erb; highlight: [1,2,3,4,5,6,7,8,9,10,11,12,13]>
 <%= form_for([@post, @post.comments.build]) do |f| %>
   <div class="field">
     <%= f.label :commenter %><br />
@@ -1475,7 +1475,7 @@ create a file +app/views/comments/_form.html.erb+ and in it you put:
 
 Then you make the +app/views/posts/show.html.erb+ look like the following:
 
-<erb>
+<erb; highlight: 22>
 <p class="notice"><%= notice %></p>
 
 <p>
@@ -1522,7 +1522,7 @@ in the +CommentsController+.
 So first, let's add the delete link in the
 +app/views/comments/_comment.html.erb+ partial:
 
-<erb>
+<erb; highlight: [11,12,13,14,15]>
 <p>
   <b>Commenter:</b>
   <%= comment.commenter %>
@@ -1545,7 +1545,7 @@ Clicking this new "Destroy Comment" link will fire off a <tt>DELETE
 this to find the comment we want to delete, so let's add a destroy action to our
 controller:
 
-<ruby>
+<ruby; highlight: [9,10,11,12,13,14]>
 class CommentsController < ApplicationController
 
   def create
@@ -1576,7 +1576,7 @@ Otherwise they would simply occupy space in the database. Rails allows you to
 use the +dependent+ option of an association to achieve this. Modify the Post
 model, +app/models/post.rb+, as follows:
 
-<ruby>
+<ruby; highlight: 5>
 class Post < ActiveRecord::Base
   validates :name,  :presence => true
   validates :title, :presence => true,
@@ -1602,7 +1602,7 @@ To use the authentication system, we specify it at the top of our
 +PostsController+, in this case, we want the user to be authenticated on every
 action, except for +index+ and +show+, so we write that:
 
-<ruby>
+<ruby; highlight: 3>
 class PostsController < ApplicationController
 
   http_basic_authenticate_with :name => "dhh", :password => "secret", :except => :index
@@ -1618,7 +1618,7 @@ class PostsController < ApplicationController
 We also only want to allow authenticated users to delete comments, so in the
 +CommentsController+ we write:
 
-<ruby>
+<ruby; highlight: 3>
 class CommentsController < ApplicationController
 
   http_basic_authenticate_with :name => "dhh", :password => "secret", :only => :destroy
@@ -1658,7 +1658,7 @@ Next, edit the +post.rb+ file to create the other side of the association, and
 to tell Rails (via the +accepts_nested_attributes_for+ macro) that you intend to
 edit tags via posts:
 
-<ruby>
+<ruby; highlight: [9,10]>
 class Post < ActiveRecord::Base
   validates :name,  :presence => true
   validates :title, :presence => true,
@@ -1679,7 +1679,7 @@ filled in.
 
 We will modify +views/posts/_form.html.erb+ to render a partial to make a tag:
 
-<erb>
+<erb; highlight: [1,2,15,16,19,20,23,24,26,27,28,30]>
 <% @post.tags.build %>
 <%= form_for(@post) do |post_form| %>
   <% if @post.errors.any? %>
@@ -1729,7 +1729,7 @@ object ready to create.
 Now create the folder <tt>app/views/tags</tt> and make a file in there called
 <tt>_form.html.erb</tt> which contains the form for the tag:
 
-<erb>
+<erb; highlight: [1,2,3,4,5,6,7,8,9,10,11,12]>
 <%= form.fields_for :tags do |tag_form| %>
   <div class="field">
     <%= tag_form.label :name, 'Tag:' %>
@@ -1747,7 +1747,7 @@ Now create the folder <tt>app/views/tags</tt> and make a file in there called
 Finally, we will edit the <tt>app/views/posts/show.html.erb</tt> template to
 show our tags.
 
-<erb>
+<erb; highlight: 20>
 <p class="notice"><%= notice %></p>
 
 <p>
@@ -1796,7 +1796,7 @@ for the Post show template, we put it in the PostsHelper.
 
 Open up <tt>app/helpers/posts_helper.rb</tt> and add the following:
 
-<erb>
+<erb; highlight: [2,3,4]>
 module PostsHelper
   def join_tags(post)
     post.tags.map { |t| t.name }.join(", ")
@@ -1807,7 +1807,7 @@ end
 Now you can edit the view in <tt>app/views/posts/show.html.erb</tt> to look like
 this:
 
-<erb>
+<erb; highlight: 20>
 <p class="notice"><%= notice %></p>
 
 <p>
