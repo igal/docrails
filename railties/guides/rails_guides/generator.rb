@@ -214,7 +214,7 @@ module RailsGuides
     def with_workaround_for_notextile(body)
       code_blocks = []
 
-      body.gsub!(%r{<(yaml|shell|ruby|erb|html|sql|plain)>(.*?)</\1>}m) do |m|
+      body.gsub!(%r{<(yaml|shell|ruby|erb|html|sql|plain)(;[^>]+)?>(.*?)</\1>}m) do |m|
         brush = case $1
           when 'ruby', 'sql', 'plain'
             $1
@@ -229,8 +229,8 @@ module RailsGuides
         code_blocks.push(<<HTML)
 <notextile>
 <div class="code_container">
-<pre class="brush: #{brush}; gutter: false; toolbar: false">
-#{ERB::Util.h($2).strip}
+<pre class="brush: #{brush}; gutter: false; toolbar: false#{$2}">
+#{ERB::Util.h($3).strip}
 </pre>
 </div>
 </notextile>
